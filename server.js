@@ -3,7 +3,7 @@ const app = express();
 const sequelize = require('./database/database');
 const cors = require('cors');
 
-const voiture = require('./routes/VoitureRoute');
+const voiture = require('./routes/voitureRoute');
 
 app.use(cors());
 app.use(express.json());
