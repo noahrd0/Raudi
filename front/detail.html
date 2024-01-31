@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raudi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+ 
+    form {
+      margin-bottom: 20px;
+    }
+ 
+    #voituresList {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Raudi</h1>
+ 
+  <div id="voituresList">
+    <h2>Liste des nos modeles</h2>
+    <ul id="voitureUl"></ul>
+  </div>
+ 
+<script>
+    async function afficherVoiture() {
+        const response = await fetch('http://localhost:8000/raudi/:id');
+        const data = await response.json();
+
+        console.log(data);
+
+        const voitureUl = document.getElementById('voitureUl');
+        voitureUl.innerHTML = '';
+
+        data.forEach(voiture => {
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `raudi/${voiture.id}`;
+            link.textContent = `${voiture.nom} ${voiture.carburant} - ${voiture.prix}`;
+            li.appendChild(link);
+            voitureUl.appendChild(li);
+        });
+    }
+    afficherVoiture();
+</script>
+ 
+</body>
+</html>

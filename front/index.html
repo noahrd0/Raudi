@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+ 
+    form {
+      margin-bottom: 20px;
+    }
+ 
+    #usersList {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Raudi</h1>
+ 
+  <div id="usersList">
+    <h2>Liste des nos modeles</h2>
+    <ul id="usersUl"></ul>
+  </div>
+ 
+<script>
+    async function afficherVoiture() {
+        const response = await fetch('http://localhost:8000/raudi/');
+        const data = await response.json();
+
+        console.log(data);
+
+        const usersUl = document.getElementById('usersUl');
+        usersUl.innerHTML = '';
+
+        data.forEach(user => {
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `detail.html`;
+            link.textContent = `${user.nom} ${user.carburant} - ${user.prix}`;
+            li.appendChild(link);
+            usersUl.appendChild(li);
+        });
+    }
+    afficherVoiture();
+</script>
+ 
+</body>
+</html>
