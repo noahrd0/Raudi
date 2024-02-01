@@ -1,78 +1,100 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test API</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
- 
-    form {
-      margin-bottom: 20px;
-    }
- 
-    #usersList {
-      margin-top: 20px;
-    }
-  </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px !important;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        #usersList {
+            margin-top: 20px;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="index.html">Raudi</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin: 10px 25px;">
+    <a class="navbar-brand" href="index.html">Raudi</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="index.html">Accueil</a>
+                <a class="nav-link" href="index.html">Accueil</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="modeles.html"><strong>Modèles</strong></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="a_propos.html">À propos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="connexion.html">Se connecter</a>
-            </li>
-          </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="modeles.html"><strong>Modèles</strong></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="a_propos.html">À propos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="connexion.html">Se connecter</a>
+                </li>
+            </ul>
         </div>
-      </nav>
-  <h1>Modèles</h1>
- 
-  <div id="usersList">
-    <h2>Liste des nos modeles</h2>
-    <ul id="voitureUl"></ul>
-  </div>
- 
-<script>
-    async function afficherVoiture() {
-        const response = await fetch('http://localhost:8000/raudi/');
-        const data = await response.json();
+    </nav>
+    <body>
+    <div id="usersList">
+        <h2>Voir tous les modèles</h2>
+        <div class="card-deck d-flex justify-content-arround gap-3" id="voitureDeck"></div>
 
-        console.log(data);
+    <script>
+        async function afficherVoiture() {
+            const response = await fetch('http://localhost:8000/raudi/');
+            const data = await response.json();
 
-        const voitureUl = document.getElementById('voitureUl');
-        voitureUl.innerHTML = '';
+            console.log(data);
 
-        data.forEach(voiture => {
-            const li = document.createElement('li');
-            const link = document.createElement('a');
-            link.href = `detail.html?id=${voiture.id}`;
-            link.textContent = `${voiture.nom} - ${voiture.prix}`;
-            li.appendChild(link);
-            voitureUl.appendChild(li);
-        });
-    }
-    afficherVoiture();
-</script>
- 
+            const voitureDeck = document.getElementById('voitureDeck');
+            voitureDeck.innerHTML = '';
+
+            data.forEach(voiture => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style = 'width: 18rem;';
+
+                const image = document.createElement('img');
+                image.className = 'card-img-top';
+                image.src = voiture.Image;
+                console.log(voiture.nom, voiture.Image);
+                image.alt = 'Voiture Image';
+                card.appendChild(image);
+
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+
+                const title = document.createElement('h5');
+                title.className = 'card-title';
+                title.textContent = voiture.nom;
+                cardBody.appendChild(title);
+
+                const prix = document.createElement('p');
+                prix.className = 'card-text';
+                prix.textContent = voiture.prix + ',00€';
+                cardBody.appendChild(prix);
+
+                const link = document.createElement('a');
+                link.href = `detail.html?id=${voiture.id}`;
+                link.className = 'btn btn-dark';
+                link.textContent = 'Plus d\'information';
+                cardBody.appendChild(link);
+
+                card.appendChild(cardBody);
+                voitureDeck.appendChild(card);
+            });
+        }
+        afficherVoiture();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

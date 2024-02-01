@@ -10,7 +10,6 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
     }
  
     form {
@@ -23,7 +22,7 @@
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin: 10px 25px;">
     <a class="navbar-brand" href="index.html">Raudi</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -45,8 +44,12 @@
       </ul>
     </div>
   </nav>
-  <h1>Raudi</h1>
- 
-
-</body>
+      <div class="position-relative">
+        <div class="position-absolute top-0 start-0 p-3" style="margin-top: 50px; margin-left: 50px;">
+          <h1 class="text-light">Le SUV Compact 100% électrique par excellence</h1>
+            <button class="btn" style="background-color: white; padding: 10px 20px;">Decouvrir la Raudi R1</button>
+          </div>
+        <video src="../images/Raudi.mp4" autoplay loop muted playsinline style="width: 100%;"></video>
+      </div>
+    </body>
 </html>

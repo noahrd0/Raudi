@@ -30,7 +30,8 @@ exports.createVoiture = (req, res) => {
         portes : req.body.portes,
         places : req.body.places,
         prix : req.body.prix,
-        carburant : req.body.carburant
+        carburant : req.body.carburant,
+        image : req.body.image
     })
         .then(voiture => {
             res.send(voiture);

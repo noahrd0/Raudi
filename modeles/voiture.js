@@ -27,9 +27,15 @@ const Modele = sequelize.define('modele', {
     prix: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    Image: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 }, {
     freezeTableName: true
 });
+
+Modele.sync({ alter : true });
 
 module.exports = Modele;

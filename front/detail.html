@@ -10,7 +10,6 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
     }
  
     form {
@@ -23,7 +22,7 @@
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin: 10px 25px;">
     <a class="navbar-brand" href="index.html">Raudi</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -45,10 +44,59 @@
       </ul>
     </div>
   </nav>
-  <h1>Raudi</h1>
-
-  <div id="response"></div>
- 
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <div id="response" style="display: flex; justify-content: center; align-items: center; flex: 1;"></div>
+    <div style="flex: 1;">
+      <form>
+        <div class="form-group">
+          <label for="couleur">Couleur :</label>
+          <select class="form-control" id="couleur">
+            <option value="gris" data-prix="0">Gris (Inclus)</option>
+            <option value="rouge" data-prix="1000">Rouge (+1000€)</option>
+            <option value="bleu" data-prix="800">Bleu (+800€)</option>
+            <option value="vert" data-prix="600">Vert (+600€)</option>
+            <option value="jaune" data-prix="500">Jaune (+500€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="phares">Phares :</label>
+          <select class="form-control" id="phares">
+            <option value="halogene" data-prix="0">Halogène (Inclus)</option>
+            <option value="led" data-prix="500">LED (+500€)</option>
+            <option value="xenon" data-prix="800">Xénon (+800€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="jantes">Jantes :</label>
+          <select class="form-control" id="jantes">
+            <option value="acier" data-prix="0">Acier (Inclus)</option>
+            <option value="alliage" data-prix="500">Alliage (+500€)</option>
+            <option value="carbone" data-prix="1000">Carbone (+1000€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sieges">Sièges :</label>
+          <select class="form-control" id="sieges">
+            <option value="tissu" data-prix="0">Tissu (Inclus)</option>
+            <option value="cuir" data-prix="1000">Cuir (+1000€)</option>
+            <option value="carbone" data-prix="2000">Carbone (+2000€)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="volant">Volant :</label>
+          <select class="form-control" id="volant">
+            <option value="cuir" data-prix="0">Cuir (Inclus)</option>
+            <option value="carbone" data-prix="1000">Carbone (+1000€)</option>
+            <option value="alcantara" data-prix="800">Alcantara (+800€)</option>
+          </select>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Appliquer</button>
+      </form>
+    </div>
+  </div>
+</div>
+  
 <script>
     async function afficherVoiture() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -59,11 +107,15 @@
     console.log(data);
     let output = '';
     output += `
-        <p>nom du modele : ${data.nom}<p>
-        <p>nombre de portes : ${data.portes}</p>
-        <p>nombre de places : ${data.places}</p>
-        <p>type de carburant : ${data.carburant}</p>
-        <p>prix : ${data.prix}</p>
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="${data.Image}" alt="Card image cap">
+          <div class="card-body text-center"> <!-- Added text-center class -->
+            <p class="card-text">${data.nom}</p>
+            <p class="card-text">${data.portes} portes, ${data.places} places</p>
+            <p class="card-text">moteur ${data.carburant}</p>
+            <p class="card-text">${data.prix},00€</p>
+          </div>
+        </div>
     `;
     document.getElementById('response').innerHTML = output;
     }
