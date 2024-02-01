@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/raudi', voiture);
-app.use('/raudi', user);
+app.use('/user', user);
 app.use('/raudi', achat);
 
 // Synchronisez les modèles avec la base de données

@@ -44,8 +44,39 @@
       </ul>
     </div>
   </nav>
-  <h1>Connexion</h1>
- 
-
+<form style="max-width: 500px; margin: 0 auto;">
+    <h2 style="text-align: center;">Connexion</h2>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="Entrez votre email">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
+    </div>
+    <button type="submit" class="btn btn-dark" onclick="Login()">Se connecter</button>
+    <a href="inscription.html" class="btn btn-secondary">Créer un compte</a>
+</form>
 </body>
 </html>
+<script>
+    async function Login() {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const response = await fetch('http://localhost:8000/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+            window.location.href = 'index.html';
+        } else {
+            alert('Email ou mot de passe incorrect');
+        }
+    }
+</script>

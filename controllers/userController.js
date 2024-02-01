@@ -1,5 +1,5 @@
 // controllers/inscriptionController.js
-const { User } = require('../modeles/user');
+const User = require('../modeles/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
