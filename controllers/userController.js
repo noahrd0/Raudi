@@ -1,5 +1,5 @@
 // controllers/inscriptionController.js
-const { User } = require('../modeles/user');
+const User  = require('../modeles/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
     const newUser = await User.create({
       email,
       password: hashedPassword,
-      role: 'user', // Vous pouvez ajuster le rôle selon vos besoins
+      role: 'admin', // Vous pouvez ajuster le rôle selon vos besoins
     });
 
     // Génération et envoi du JWT Token
