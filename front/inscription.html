@@ -54,9 +54,44 @@
         <label for="password" class="form-label">Mot de passe</label>
         <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
     </div>
-    <button type="submit" class="btn btn-dark">Créer un compte</button>
+    <button type="submit" class="btn btn-dark" onclick="Register()">Créer un compte</button>
+    <span id="error" style="color: red; size: 10px;"></span>
 </form>
  
 
 </body>
 </html>
+<script>
+    async function Register() {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const response = await fetch('http://localhost:8000/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (data.token) {
+            const login = await fetch('http://localhost:8000/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            const dataLogin = await login.json();
+            if (dataLogin.token) {
+                localStorage.setItem('token', dataLogin.token);
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('error').innerHTML = dataLogin.error;
+            }
+        } else {
+            document.getElementById('error').innerHTML = data.error;
+        }
+    }
+</script>
