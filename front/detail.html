@@ -91,35 +91,72 @@
           </select>
         </div>
         <br>
-        <button type="submit" class="btn btn-dark">Appliquer</button>
+        <button type="submit" class="btn btn-dark">Acheter</button>
       </form>
     </div>
   </div>
 </div>
   
 <script>
-    async function afficherVoiture() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    console.log(id);
-    const response = await fetch(`http://localhost:8000/raudi/${id}`);
-    const data = await response.json();
-    console.log(data);
-    let output = '';
-    output += `
-        <div class="card" style="width: 18rem;">
-          <img class="card-img-top" src="${data.Image}" alt="Card image cap">
-          <div class="card-body text-center"> <!-- Added text-center class -->
-            <p class="card-text">${data.nom}</p>
-            <p class="card-text">${data.portes} portes, ${data.places} places</p>
-            <p class="card-text">moteur ${data.carburant}</p>
-            <p class="card-text">${data.prix},00€</p>
+  async function afficherVoiture() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      console.log(id);
+      const response = await fetch(`http://localhost:8000/raudi/getVoiture/${id}`);
+      const data = await response.json();
+      console.log(data);
+      let output = '';
+      output += `
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="${data.Image}" alt="Card image cap">
+            <div class="card-body text-center"> <!-- Added text-center class -->
+              <p class="card-text">${data.nom}</p>
+              <p class="card-text">${data.portes} portes, ${data.places} places</p>
+              <p class="card-text">moteur ${data.carburant}</p>
+              <p class="card-text">${data.prix},00€</p>
+            </div>
           </div>
-        </div>
-    `;
-    document.getElementById('response').innerHTML = output;
-    }
-    afficherVoiture();
+      `;
+      document.getElementById('response').innerHTML = output;
+
+      // Ajoutez un gestionnaire d'événements pour le formulaire
+      const form = document.querySelector('form');
+      form.addEventListener('submit', (event) => {
+          event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+
+          // Collecte des données du formulaire
+          const montant = parseFloat(data.prix);  // Ou toute autre logique pour obtenir le montant
+          const dateAchat = new Date().toISOString();  // Obtenez la date actuelle ou utilisez un sélecteur de date
+
+          // Envoie des données au serveur
+          acheterVoiture({ idVoiture: id, idClient: "1", montant, dateAchat });
+      });
+  }
+
+  async function acheterVoiture(data) {
+      try {
+          const response = await fetch('http://localhost:8000/raudi/acheter', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+          });
+          console.log(data);
+
+          if (response.ok) {
+              const responseData = await response.json();
+              console.log('Achat effectué avec succès:', responseData);
+              // Rediriger ou effectuer d'autres actions après l'achat réussi
+          } else {
+              console.error('Erreur lors de l\'achat');
+          }
+      } catch (error) {
+          console.error('Erreur réseau:', error);
+      }
+  }
+
+  afficherVoiture();
 </script>
  
 </body>

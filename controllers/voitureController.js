@@ -1,5 +1,5 @@
 const Voiture = require('../modeles/voiture.js');
-const { User }  = require('../modeles/user.js');
+const User   = require('../modeles/user.js');
 const jwt = require('jsonwebtoken');
 
 // Middlewares
@@ -12,7 +12,7 @@ exports.authenticator = async (req, res, next) => {
             if (decoded) {
               // Recherchez l'utilisateur dans la base de données
               const user = await User.findOne({ where: { email: decoded.email } });
-      
+            
               if (!user) {
                 return res.status(401).json('Unauthorized: Utilisateur non trouvé');
               }
