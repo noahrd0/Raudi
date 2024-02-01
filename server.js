@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const sequelize = require('./database/database');
 const cors = require('cors');
+app.set('view engine', 'ejs');
 
 const voiture = require('./routes/voitureRoute');
 const user = require('./routes/userRoute');

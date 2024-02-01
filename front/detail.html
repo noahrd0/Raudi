@@ -1,3 +1,6 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,31 +23,49 @@
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html">Raudi</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="index.html">Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="modeles.html">Modèles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="a_propos.html">À propos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="connexion.html">Se connecter</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
   <h1>Raudi</h1>
- 
-  <div id="voituresList">
-    <h2>Liste des nos modeles</h2>
-    <ul id="voitureUl"></ul>
-  </div>
+
+  <div id="response"></div>
  
 <script>
     async function afficherVoiture() {
-        const response = await fetch('http://localhost:8000/raudi/:id');
-        const data = await response.json();
-
-        console.log(data);
-
-        const voitureUl = document.getElementById('voitureUl');
-        voitureUl.innerHTML = '';
-
-        data.forEach(voiture => {
-            const li = document.createElement('li');
-            const link = document.createElement('a');
-            link.href = `raudi/${voiture.id}`;
-            link.textContent = `${voiture.nom} ${voiture.carburant} - ${voiture.prix}`;
-            li.appendChild(link);
-            voitureUl.appendChild(li);
-        });
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    console.log(id);
+    const response = await fetch(`http://localhost:8000/raudi/${id}`);
+    const data = await response.json();
+    console.log(data);
+    let output = '';
+    output += `
+        <p>nom du modele : ${data.nom}<p>
+        <p>nombre de portes : ${data.portes}</p>
+        <p>nombre de places : ${data.places}</p>
+        <p>type de carburant : ${data.carburant}</p>
+        <p>prix : ${data.prix}</p>
+    `;
+    document.getElementById('response').innerHTML = output;
     }
     afficherVoiture();
 </script>
