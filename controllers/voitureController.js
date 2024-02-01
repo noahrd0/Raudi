@@ -1,4 +1,21 @@
 const Voiture = require('../modeles/voiture.js');
+const User = require('../modeles/user.js');
+const jwt = require('jsonwebtoken');
+
+// Middlewares
+exports.authenticator = async (req, res, next) => {
+    const token = req.body.token ? req.body.token : req.headers.authorization;
+    console.log(token);
+    if (token) {
+      try {
+          next();
+      } catch (error) {
+        return res.status(401).json('Unauthorized: Token invalide');
+      }
+    } else {
+      return res.status(401).json('Unauthorized: Token non fourni');
+    }
+  };
 
 exports.getAllVoiture = (req, res) => {
     Voiture.findAll()
