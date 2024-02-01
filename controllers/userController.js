@@ -7,13 +7,6 @@ exports.register = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    //  //récupération de la liste des emails
-    //  const result = await conn.query("select * from utilisateur where email = ?",[email])
-    //  conn.release()
-    //  if(result[0].length > 0){
-    //      return res.status(400).json("erreur : email déjà utilisé")
-    //  }
-    // Vérification si l'email est déjà utilisé
     const existingUser = await User.findOne({ 
         where: { email: req.body.email } });
 
