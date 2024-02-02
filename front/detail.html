@@ -108,13 +108,13 @@
       let output = '';
       output += `
           <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="${data.Image}" alt="Card image cap">
-            <div class="card-body text-center"> <!-- Added text-center class -->
-              <p class="card-text">${data.nom}</p>
-              <p class="card-text">${data.portes} portes, ${data.places} places</p>
-              <p class="card-text">moteur ${data.carburant}</p>
-              <p class="card-text">${data.prix},00€</p>
-            </div>
+              <img class="card-img-top" src="${data.Image}" alt="Card image cap">
+              <div class="card-body text-center">
+                  <p class="card-text">${data.nom}</p>
+                  <p class="card-text">${data.portes} portes, ${data.places} places</p>
+                  <p class="card-text">moteur ${data.carburant}</p>
+                  <p class="card-text">${data.prix},00€</p>
+              </div>
           </div>
       `;
       document.getElementById('response').innerHTML = output;
@@ -136,6 +136,7 @@
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${data.token}`,
               },
               body: JSON.stringify(data),
           });

@@ -30,7 +30,7 @@ exports.authenticator = async (req, res, next) => {
     } else {
       return res.status(401).json('Unauthorized: Token non fourni');
     }
-  };
+};
 
 exports.getAllVoiture = (req, res) => {
     Voiture.findAll()

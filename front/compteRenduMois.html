@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compte Rendu Gains</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #compteRendu {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Compte Rendu Gains par Mois</h1>
+
+<div id="compteRendu"></div>
+
+<script>
+    async function afficherCompteRenduGains() {
+        try {
+            const response = await fetch('http://localhost:8000/raudi/compta');
+            const data = await response.json();
+
+            // Utilisez les données pour afficher le compte rendu dans l'interface utilisateur
+            const compteRenduDiv = document.getElementById('compteRendu');
+
+            data.forEach(result => {
+                compteRenduDiv.innerHTML += `<p>Mois ${result.month}: ${result.totalGains} €</p>`;
+            });
+        } catch (error) {
+            console.error('Erreur lors de la récupération du compte rendu des gains:', error);
+        }
+    }
+
+    afficherCompteRenduGains();
+</script>
+
+</body>
+</html>
