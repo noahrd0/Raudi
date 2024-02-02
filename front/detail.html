@@ -108,28 +108,32 @@
       let output = '';
       output += `
           <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="${data.Image}" alt="Card image cap">
-            <div class="card-body text-center"> <!-- Added text-center class -->
-              <p class="card-text">${data.nom}</p>
-              <p class="card-text">${data.portes} portes, ${data.places} places</p>
-              <p class="card-text">moteur ${data.carburant}</p>
-              <p class="card-text">${data.prix},00€</p>
-            </div>
+              <img class="card-img-top" src="${data.Image}" alt="Card image cap">
+              <div class="card-body text-center">
+                  <p class="card-text">${data.nom}</p>
+                  <p class="card-text">${data.portes} portes, ${data.places} places</p>
+                  <p class="card-text">moteur ${data.carburant}</p>
+                  <p class="card-text">${data.prix},00€</p>
+              </div>
           </div>
       `;
       document.getElementById('response').innerHTML = output;
 
       // Ajoutez un gestionnaire d'événements pour le formulaire
       const form = document.querySelector('form');
-      form.addEventListener('submit', (event) => {
-          event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+      form.addEventListener('submit', async (event) => {
+          event.preventDefault();
 
-          // Collecte des données du formulaire
-          const montant = parseFloat(data.prix);  // Ou toute autre logique pour obtenir le montant
-          const dateAchat = new Date().toISOString();  // Obtenez la date actuelle ou utilisez un sélecteur de date
+            // Récupérer le token du localStorage
+            const token = localStorage.getItem('token');
 
-          // Envoie des données au serveur
-          acheterVoiture({ idVoiture: id, idClient: "1", montant, dateAchat });
+              // Collecte des données du formulaire
+              const montant = parseFloat(data.prix);
+              const dateAchat = new Date().toISOString();
+
+              // Envoie des données au serveur avec l'ID du client
+              await acheterVoiture({ voitureId: id, clientId: id, montant, dateAchat, token });
+
       });
   }
 
@@ -139,6 +143,7 @@
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${data.token}`,
               },
               body: JSON.stringify(data),
           });
