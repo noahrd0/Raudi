@@ -59,10 +59,16 @@
 
 <script>
     async function afficherCompteRenduGains() {
+      const token = localStorage.getItem('token');
         try {
-            const response = await fetch('http://localhost:8000/raudi/compta');
+            const response = await fetch('http://localhost:8000/raudi/compta', {
+            method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${token}`
+                    }
+                });
             const data = await response.json();
-            console.log(data);
 
             // Utilisez les données pour afficher le compte rendu dans l'interface utilisateur
             const compteRenduDiv = document.getElementById('compteRendu');
@@ -71,6 +77,8 @@
                 compteRenduDiv.innerHTML += `<p>Mois ${result.month}: ${result.totalGains} €</p>`;
             });
         } catch (error) {
+            const compteRenduDiv = document.getElementById('compteRendu');
+            compteRenduDiv.innerHTML += `<p>Vous n'avez pas acces a cette page</p>`;
             console.error('Erreur lors de la récupération du compte rendu des gains:', error);
         }
     }

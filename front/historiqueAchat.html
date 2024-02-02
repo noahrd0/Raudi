@@ -60,8 +60,16 @@
 
     <script>
         async function fetchHistoriqueAchats() {
+          const token = localStorage.getItem('token');
+          console.log(token)
             try {
-                const response = await fetch('http://localhost:8000/raudi/historique');
+                const response = await fetch('http://localhost:8000/raudi/historique', {
+                  method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${token}`
+                    }
+                });
                 const data = await response.json();
 
                 const achatsBody = document.getElementById('achatsBody');
@@ -76,6 +84,8 @@
                     achatsBody.appendChild(row);
                 });
             } catch (error) {
+                const achatsBody = document.getElementById('achatsBody');
+                achatsBody.innerHTML += `<p>Vous n'avez pas acces a cette page</p>`;
                 console.error(error);
             }
         }

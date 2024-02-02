@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 // Middlewares
 exports.authenticator = async (req, res, next) => {
     const token = req.body.token ? req.body.token : req.headers.authorization;
-    console.log(token)
-    
+
     if (token) {
         try {
             let decoded = jwt.verify(token, process.env.SECRET_KEY);
@@ -40,16 +39,21 @@ exports.authenticator = async (req, res, next) => {
 
 exports.compteRendu = async (req, res) => {
     try {
-        const result = await Achat.findAll({
-            attributes: [
-                [sequelize.fn('MONTH', sequelize.col('dateAchat')), 'month'],
-                [sequelize.fn('SUM', sequelize.col('montant')), 'totalGains']
-            ],
-            group: [sequelize.fn('MONTH', sequelize.col('dateAchat'))],
-            raw: true
-        });
+        // Utilisez le rôle pour vérifier les autorisations
+        if (req.user.role === 'admin' || req.user.role === 'comptable') {
+            const result = await Achat.findAll({
+                attributes: [
+                    [sequelize.fn('MONTH', sequelize.col('dateAchat')), 'month'],
+                    [sequelize.fn('SUM', sequelize.col('montant')), 'totalGains']
+                ],
+                group: [sequelize.fn('MONTH', sequelize.col('dateAchat'))],
+                raw: true
+            });
 
-        res.json(result);
+            res.json(result);
+        } else {
+            res.status(403).json('Forbidden: Vous n\'avez pas les autorisations nécessaires.');
+        }
     } catch (error) {
         console.error('Erreur lors de la récupération du compte rendu des gains:', error);
         res.status(500).json({ error: 'Erreur serveur' });
@@ -85,6 +89,8 @@ exports.createAchat = async (req, res) => {
 
 // Ajoutez une fonction pour récupérer tout l'historique d'achat
 exports.getAllAchats = (req, res) => {
+
+    if (req.user.role === 'admin' || req.user.role === 'comptable') {
     Achat.findAll({
         include: [User, Voiture],
     })
@@ -96,4 +102,5 @@ exports.getAllAchats = (req, res) => {
                 message: err.message || "Une erreur s'est produite lors de la récupération de l'historique d'achat."
             });
         });
+    }
 };
