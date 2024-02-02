@@ -119,16 +119,13 @@
       `;
       document.getElementById('response').innerHTML = output;
 
-      // Ajoutez un gestionnaire d'événements pour le formulaire
       const form = document.querySelector('form');
       form.addEventListener('submit', (event) => {
-          event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+          event.preventDefault();
 
-          // Collecte des données du formulaire
-          const montant = parseFloat(data.prix);  // Ou toute autre logique pour obtenir le montant
-          const dateAchat = new Date().toISOString();  // Obtenez la date actuelle ou utilisez un sélecteur de date
+          const montant = parseFloat(data.prix);
+          const dateAchat = new Date().toISOString();
 
-          // Envoie des données au serveur
           acheterVoiture({ idVoiture: id, idClient: "1", montant, dateAchat });
       });
   }
@@ -147,7 +144,6 @@
           if (response.ok) {
               const responseData = await response.json();
               console.log('Achat effectué avec succès:', responseData);
-              // Rediriger ou effectuer d'autres actions après l'achat réussi
           } else {
               console.error('Erreur lors de l\'achat');
           }
