@@ -5,6 +5,7 @@ function Logout() {
     // Redirigez l'utilisateur vers la page de connexion (ou une autre page appropriée)
     window.location.href = 'connexion.html';
 }
+
 function checkAuthentication() {
     // Récupérez le token du localStorage
     const token = localStorage.getItem('token');
