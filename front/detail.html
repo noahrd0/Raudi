@@ -44,60 +44,16 @@
       </ul>
     </div>
   </nav>
-  <div style="display: flex; justify-content: center; align-items: center;">
-    <div id="response" style="display: flex; justify-content: center; align-items: center; flex: 1;"></div>
-    <div style="flex: 1;">
-      <form>
-        <div class="form-group">
-          <label for="couleur">Couleur :</label>
-          <select class="form-control" id="couleur">
-            <option value="gris" data-prix="0">Gris (Inclus)</option>
-            <option value="rouge" data-prix="1000">Rouge (+1000€)</option>
-            <option value="bleu" data-prix="800">Bleu (+800€)</option>
-            <option value="vert" data-prix="600">Vert (+600€)</option>
-            <option value="jaune" data-prix="500">Jaune (+500€)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="phares">Phares :</label>
-          <select class="form-control" id="phares">
-            <option value="halogene" data-prix="0">Halogène (Inclus)</option>
-            <option value="led" data-prix="500">LED (+500€)</option>
-            <option value="xenon" data-prix="800">Xénon (+800€)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="jantes">Jantes :</label>
-          <select class="form-control" id="jantes">
-            <option value="acier" data-prix="0">Acier (Inclus)</option>
-            <option value="alliage" data-prix="500">Alliage (+500€)</option>
-            <option value="carbone" data-prix="1000">Carbone (+1000€)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="sieges">Sièges :</label>
-          <select class="form-control" id="sieges">
-            <option value="tissu" data-prix="0">Tissu (Inclus)</option>
-            <option value="cuir" data-prix="1000">Cuir (+1000€)</option>
-            <option value="carbone" data-prix="2000">Carbone (+2000€)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="volant">Volant :</label>
-          <select class="form-control" id="volant">
-            <option value="cuir" data-prix="0">Cuir (Inclus)</option>
-            <option value="carbone" data-prix="1000">Carbone (+1000€)</option>
-            <option value="alcantara" data-prix="800">Alcantara (+800€)</option>
-          </select>
-        </div>
-        <br>
-        <button type="submit" class="btn btn-dark">Acheter</button>
-      </form>
-    </div>
-  </div>
+  <div id="response" style="display: flex; justify-content: center; align-items: center; flex: 1;"></div>
+    <form style="display: flex; justify-content: center;">
+      <div id="options"></div>
+    </form>
+<div class="text-center">
+  <button id="submit-btn" type="submit" class="btn btn-dark" onclick="acheterVoiture()">Acheter</button>
 </div>
   
 <script>
+
   async function afficherVoiture() {
       const urlParams = new URLSearchParams(window.location.search);
       const id = urlParams.get('id');
@@ -107,23 +63,38 @@
       console.log(data);
       let output = '';
       output += `
-          <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="${data.Image}" alt="Card image cap">
-              <div class="card-body text-center">
-                  <p class="card-text">${data.nom}</p>
-                  <p class="card-text">${data.portes} portes, ${data.places} places</p>
-                  <p class="card-text">moteur ${data.carburant}</p>
-                  <p class="card-text">${data.prix},00€</p>
-              </div>
+        <div class="row">
+          <div class="col-md-6">
+            <img class="img-fluid" src="${data.Image}" alt="Car Image" style="width: 100vw;">
           </div>
+          <div class="col-md-6 d-flex align-items-center text-center">
+            <div class="card-body">
+              <h5 class="card-title">${data.nom}</h5><br>
+              <p class="card-text">${data.portes} portes, ${data.places} places</p>
+              <p class="card-text">Moteur ${data.carburant}</p>
+              <p class="card-text">${data.prix},00€ (sans options)</p>
+            </div>
+          </div>
+        </div>
       `;
       document.getElementById('response').innerHTML = output;
 
-      const form = document.querySelector('form');
-      form.addEventListener('submit', (event) => {
+      const form = document.getElementById('submit-btn');
+      form.addEventListener('click', (event) => {
           event.preventDefault();
 
-          const montant = parseFloat(data.prix);
+          const selects = document.querySelectorAll('select');
+          const montant = Array.from(selects).reduce((total, select) => {
+            if (select.selectedIndex !== -1) {
+              const option = select.options[select.selectedIndex];
+              const prix = option.getAttribute('data-prix');
+              if (prix) {
+                total += parseFloat(prix);
+              }
+            }
+            return total + data.prix;
+          }, 0);
+          console.log(montant);
           const dateAchat = new Date().toISOString();
 
           acheterVoiture({ idVoiture: id, idClient: "1", montant, dateAchat });
@@ -153,7 +124,49 @@
       }
   }
 
+    async function getOptions() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const response = await fetch(`http://localhost:8000/option/${id}`);
+      const data = await response.json();
+      console.log(data);
+
+      let optionsHTML = '';
+      const types = {};
+
+      data.forEach(option => {
+        if (!types[option.type]) {
+          types[option.type] = [];
+        }
+
+        types[option.type].push(option);
+      });
+
+      for (const type in types) {
+        optionsHTML += `
+          <div class="form-group" style="width: 50vw;">
+            <label for="${type}">${type} :</label>
+            <select class="form-control" id="${type}">
+        `;
+
+        types[type].forEach(option => {
+          optionsHTML += `
+            <option value="${option.value}" data-prix="${option.prix}">${option.value} (+${option.prix}€)</option>
+          `;
+        });
+
+        optionsHTML += `
+            </select>
+          </div>
+        `;
+      }
+
+      const selectElement = document.getElementById('options');
+      selectElement.innerHTML += optionsHTML;
+    }
+  
   afficherVoiture();
+  getOptions();
 </script>
  
 </body>
