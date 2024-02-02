@@ -8,7 +8,8 @@ const jwt = require('jsonwebtoken');
 // Middlewares
 exports.authenticator = async (req, res, next) => {
     const token = req.body.token ? req.body.token : req.headers.authorization;
-    console.log(token);
+    console.log(token)
+    
     if (token) {
         try {
             let decoded = jwt.verify(token, process.env.SECRET_KEY);
@@ -17,7 +18,6 @@ exports.authenticator = async (req, res, next) => {
 
               // Recherchez l'utilisateur dans la base de données
               const user = await User.findOne({ where: { email: decoded.email } });
-              console.log(user.id);
             
               if (!user) {
                 return res.status(401).json('Unauthorized: Utilisateur non trouvé');
@@ -60,6 +60,7 @@ exports.createAchat = async (req, res) => {
     try {
         // Récupérer les détails nécessaires pour créer un achat depuis le corps de la requête
         const { clientId, voitureId, montant, dateAchat } = req.body;
+        console.log(req.body)
 
         // Vérifier si les détails nécessaires sont présents
         if (!clientId || !voitureId || !montant || !dateAchat) {
