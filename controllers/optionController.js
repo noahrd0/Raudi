@@ -1,23 +1,23 @@
 const User   = require('../modeles/user.js');
 const Option = require('../modeles/options.js');
 const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
 // Middlewares
 exports.authenticator = async (req, res, next) => {
     const token = req.body.token ? req.body.token : req.headers.authorization;
+    console.log(token);
     if (token) {
         try {
             let decoded = jwt.verify(token, process.env.SECRET_KEY);
-
+            console.log(decoded);
             if (decoded) {
-              // Recherchez l'utilisateur dans la base de données
               const user = await User.findOne({ where: { email: decoded.email } });
             
               if (!user) {
                 return res.status(401).json('Unauthorized: Utilisateur non trouvé');
               }
                 const userData = user.dataValues || user;
-              // Ajoutez les informations de l'utilisateur à req.user
               req.user = {
                 email: userData.email,
                 role: userData.role,
