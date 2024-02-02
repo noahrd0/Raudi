@@ -16,13 +16,6 @@ app.use('/user', user);
 app.use('/raudi', achat);
 app.use('/option', option);
 
-// Synchronisez les modèles avec la base de données
-sequelize.sync({ alter: true }).then(() => {
-    console.log('Base de données synchronisée');
-  }).catch((err) => {
-    console.error('Erreur lors de la synchronisation de la base de données', err);
-});
-
 app.listen(8000, () => {
     console.log('Server port 8000');
     sequelize.sync();
